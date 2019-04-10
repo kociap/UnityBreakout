@@ -1,20 +1,25 @@
 ﻿using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
-    private new Animation animation;
-    private Vector3 initialScale;
-    [SerializeField] private AnimationClip wobbleAnimation;
+    private Animator animator;
+    private Vector3 defaultScale;
+    private Vector2 velocity = Vector2.zero;
+
     // Stretch factor. Bigger means bigger stretch, 0 means no stretch
-    [SerializeField] private float stretchFactor = 0.5f;
-    [SerializeField] private float translationSpeed = 18.0f;
+    public float stretchFactor = 0.04f;
+    public float maxScaleX = 3.0f;
+    public float translationSpeed = 1150.0f;
+    public float smoothTime = 0.02f;
+    [Header("Animations")]
+    [SerializeField] private string wobbleName;
 
     private void Start() {
-        initialScale = gameObject.transform.localScale;
-        animation = GetComponent<Animation>();
+        defaultScale = transform.localScale;
+        animator = GetComponent<Animator>();
     }
 
     private void Update() {
-        Vector3 currentPaddlePosition = gameObject.transform.position;
+        Vector3 currentPaddlePosition = transform.position;
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition + new Vector3(0, 0, 10));
         if (mousePosition.x != currentPaddlePosition.x) {
             Vector3 targetPosition = new Vector3(mousePosition.x, currentPaddlePosition.y, currentPaddlePosition.z);
@@ -30,17 +35,19 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void TranslatePaddle(Vector3 currentPaddlePosition, Vector3 targetPosition) {
-        gameObject.transform.position = Vector3.Lerp(currentPaddlePosition, targetPosition, Time.deltaTime / TimeScale.timeScale * translationSpeed);
+        // Moves with the same speed during slowmotion
+        //transform.position = Vector3.Lerp(currentPaddlePosition, targetPosition, Time.unscaledDeltaTime * translationSpeed);
+        transform.position = Vector2.SmoothDamp(currentPaddlePosition, targetPosition, ref velocity, smoothTime, Mathf.Infinity, Time.unscaledDeltaTime);
     }
 
     private void ScalePaddle(Vector3 currentPaddlePosition, Vector3 targetPosition) {
-        float paddleScaleX = 1 + (targetPosition - currentPaddlePosition).magnitude * stretchFactor;
+        float distance = (targetPosition - currentPaddlePosition).magnitude;
+        float paddleScaleX = Mathf.Min(1 + distance * stretchFactor, maxScaleX);
         float paddleScaleY = 1 / paddleScaleX;
-        gameObject.transform.localScale = new Vector3(initialScale.x * paddleScaleX, initialScale.y * paddleScaleY, initialScale.z);
+        transform.localScale = new Vector3(defaultScale.x * paddleScaleX, defaultScale.y * paddleScaleY, defaultScale.z);
     }
 
     private void ReactToBallCollision() {
-        animation.Stop();
-        animation.Play(wobbleAnimation.name);
+        animator.SetTrigger(wobbleName);
     }
 }

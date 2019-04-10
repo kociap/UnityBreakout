@@ -12,16 +12,19 @@ public class Coroutine {
 
     public static Coroutine Start(IEnumerator enumerator) {
         UnityEngine.Coroutine routine = CoroutineCaller.StartCoroutine(enumerator);
+        if (routine == null) { UnityEngine.Debug.Log("Coroutine returned immediately"); }
         return new Coroutine(routine);
     }
 
     public static Coroutine Delay(float time, CoroutineDefaultFunction func) {
         UnityEngine.Coroutine routine = CoroutineCaller.StartCoroutine(DelayFunctionCall(time, func));
+        if (routine == null) { UnityEngine.Debug.Log("Coroutine returned immediately"); }
         return new Coroutine(routine);
     }
 
     public static Coroutine DelayRealtime(float time, CoroutineDefaultFunction func) {
         UnityEngine.Coroutine routine = CoroutineCaller.StartCoroutine(DelayFunctionCallRealtime(time, func));
+        if (routine == null) { UnityEngine.Debug.Log("Coroutine returned immediately"); }
         return new Coroutine(routine);
     }
 

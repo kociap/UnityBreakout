@@ -10,7 +10,7 @@ public class BlockController: MonoBehaviour {
         gameObject.layer = (int)Layers.IgnoreCollision;
         SpriteRenderer spriceRenderer = GetComponent<SpriteRenderer>();
         spriceRenderer.color = Color.red;
-        Rigidbody2D rigidbody = gameObject.GetComponent<Rigidbody2D>();
+        Rigidbody2D rigidbody = GetComponent<Rigidbody2D>();
         rigidbody.bodyType = RigidbodyType2D.Dynamic;
         Vector2 forcePosition = collision.GetContact(0).point;
         rigidbody.AddForceAtPosition(collision.relativeVelocity * collisionForce, forcePosition, ForceMode2D.Force);

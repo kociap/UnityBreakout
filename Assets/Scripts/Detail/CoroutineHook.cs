@@ -13,12 +13,6 @@ namespace Detail {
 
             CoroutineCaller = this;
             DontDestroyOnLoad(this);
-            Debug.Log("Coroutine Hook created");
-        }
-
-        ~CoroutineHook() {
-            if (CoroutineCaller == this) { CoroutineCaller = null; }
-            Debug.Log("Coroutine Hook destroyed");
         }
     }
 }

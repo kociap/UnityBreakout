@@ -1,15 +1,14 @@
 ﻿using UnityEngine;
 
 public class KeepCameraOnSceneLoad : MonoBehaviour {
-    private static KeepCameraOnSceneLoad _instance = null;
+    private static bool exists = false;
 
     private void Awake() {
-        if (_instance != null) {
+        if (exists) {
             Destroy(gameObject);
-            return;
+        } else {
+            exists = true;
+            DontDestroyOnLoad(gameObject);
         }
-
-        _instance = this;
-        DontDestroyOnLoad(this);
     }
 }
