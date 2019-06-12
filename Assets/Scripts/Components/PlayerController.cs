@@ -1,21 +1,22 @@
 ﻿using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
-    private Animator animator;
     private Vector3 defaultScale;
     private Vector2 velocity = Vector2.zero;
 
     // Stretch factor. Bigger means bigger stretch, 0 means no stretch
     public float stretchFactor = 0.04f;
     public float maxScaleX = 3.0f;
+    public float minScaleDistance = 1.0f;
     public float translationSpeed = 1150.0f;
     public float smoothTime = 0.02f;
     [Header("Animations")]
+    [SerializeField]
+    private Animator animator;
     [SerializeField] private string wobbleName;
 
     private void Start() {
         defaultScale = transform.localScale;
-        animator = GetComponent<Animator>();
     }
 
     private void Update() {
@@ -42,7 +43,8 @@ public class PlayerController : MonoBehaviour {
 
     private void ScalePaddle(Vector3 currentPaddlePosition, Vector3 targetPosition) {
         float distance = (targetPosition - currentPaddlePosition).magnitude;
-        float paddleScaleX = Mathf.Min(1 + distance * stretchFactor, maxScaleX);
+        float distanceLimited = Mathf.Max(distance, minScaleDistance) - minScaleDistance;
+        float paddleScaleX = Mathf.Min(1 + distanceLimited * stretchFactor, maxScaleX);
         float paddleScaleY = 1 / paddleScaleX;
         transform.localScale = new Vector3(defaultScale.x * paddleScaleX, defaultScale.y * paddleScaleY, defaultScale.z);
     }

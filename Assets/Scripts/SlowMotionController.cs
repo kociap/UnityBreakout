@@ -12,7 +12,6 @@ public class SlowMotionController : Utils.StaticMonobehaviour<SlowMotionControll
 
 	private void Update () {
         if(inSlowMotion) {
-            Debug.Log(timeLeft);
             timeLeft -= Time.unscaledDeltaTime;
         }
 

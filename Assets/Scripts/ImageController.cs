@@ -37,7 +37,6 @@ public class ImageController: Utils.StaticMonobehaviour<ImageController> {
 
     public static void SetSaturation(float value) {
         v.shader.SetFloat(v.saturationKeyword, value);
-        Debug.Log("_Saturation " + v.shader.GetFloat(v.saturationKeyword));
     }
 
     private void OnRenderImage(RenderTexture source, RenderTexture destination) {
